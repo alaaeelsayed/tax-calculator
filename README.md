@@ -2,6 +2,10 @@
 
 A Go API for calculating Canadian income tax using marginal tax brackets.
 
+## Architecture Design
+
+This branch uses the Chi router to provide a more production-ready HTTP server with built-in middleware for logging, recovery, and cleaner route parameter handling. Chi would be a good choice for complex backend applications with multiple routes. The main branch uses Go's standard HTTP library to demonstrate core concepts.
+
 ## Quick Start
 
 ### Prerequisites

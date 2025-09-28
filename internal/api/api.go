@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/alaaeelsayed/tax-calculator/internal/service"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Server struct {
@@ -19,24 +20,24 @@ func NewServer(calculator *service.TaxCalculatorService) *Server {
 	}
 }
 
-func (s *Server) SetupRoutes() *http.ServeMux {
-	mux := http.NewServeMux()
+func (s *Server) SetupRoutes() http.Handler {
+	r := chi.NewRouter()
 
-	mux.HandleFunc("/taxes/", s.calculateTaxes)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.SetHeader("Content-Type", "application/json"))
 
-	return mux
+	r.Get("/taxes/{year}", s.calculateTaxes)
+
+	return r
 }
 
 func (s *Server) calculateTaxes(w http.ResponseWriter, r *http.Request) {
-	path := strings.TrimPrefix(r.URL.Path, "/taxes/")
-	parts := strings.Split(strings.Trim(path, "/"), "/")
-
-	if len(parts) == 0 || parts[0] == "" {
+	year := chi.URLParam(r, "year")
+	if year == "" {
 		http.Error(w, "year parameter is required", http.StatusBadRequest)
 		return
 	}
-
-	year := parts[0]
 
 	salaryStr := r.URL.Query().Get("salary")
 	if salaryStr == "" {
@@ -56,6 +57,5 @@ func (s *Server) calculateTaxes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }

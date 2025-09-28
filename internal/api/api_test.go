@@ -70,8 +70,8 @@ func TestCalculateTaxesEndpoint(t *testing.T) {
 		{
 			name:           "Missing year parameter",
 			path:           "/taxes/",
-			expectedStatus: http.StatusBadRequest,
-			expectedError:  "year parameter is required",
+			expectedStatus: http.StatusNotFound,
+			expectedError:  "404 page not found",
 		},
 		{
 			name:           "Zero salary",
