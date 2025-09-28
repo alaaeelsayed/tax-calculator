@@ -2,6 +2,10 @@
 
 A Go API for calculating Canadian income tax using marginal tax brackets.
 
+## Architecture Design
+
+This implementation uses Go's standard HTTP library to demonstrate core Go HTTP concepts and routing while maintaining clean architecture principles. The current approach keeps things simple and focuses on demonstrating understanding of fundamental Go patterns without external routing frameworks. For a more production-ready version with enhanced middleware capabilities and cleaner route handling, check out the `chi-router` branch
+
 ## Quick Start
 
 ### Prerequisites
